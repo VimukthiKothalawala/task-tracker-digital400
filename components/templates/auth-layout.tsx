@@ -14,7 +14,7 @@ export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
         <div className="space-y-6 p-8">
           <div className="space-y-2 text-center">
             <div className="flex justify-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-linear-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <Heading as="h1" size="h3" className="text-white">
                   ✓
                 </Heading>
