@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import { FormField } from "@/components/molecules/form-field";
 import { Input } from "@/components/atoms/input";
 import { Heading, Text } from "@/components/atoms";
@@ -11,7 +11,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/atoms/select";
 
 export interface TaskFormData {
   id?: string;

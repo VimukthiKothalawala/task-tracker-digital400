@@ -1,11 +1,11 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/atoms/card";
+import { Button } from "@/components/atoms/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/atoms/dropdown-menu";
 import { Text, Heading } from "@/components/atoms";
 import { PriorityBadge } from "./priority-badge";
 import { StatusBadge } from "./status-badge";

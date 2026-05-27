@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import { UserAvatar } from "@/components/molecules/user-avatar";
 import { Heading } from "@/components/atoms";
 import { LogOut, Menu, X } from "lucide-react";
@@ -12,7 +12,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/atoms/dropdown-menu";
 
 export interface NavbarProps {
   userEmail?: string;

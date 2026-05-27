@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { DashboardLayout } from "@/components/templates/dashboard-layout";
 import { TaskBoard } from "@/components/organisms/task-board";
 import { DashboardStats } from "@/components/organisms/dashboard-stats";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import { Heading, Text } from "@/components/atoms";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/atoms/dialog";
 import { TaskForm, TaskFormData } from "@/components/organisms/task-form";
 import { createClient } from "@/lib/supabase/client";
 import { Plus } from "lucide-react";

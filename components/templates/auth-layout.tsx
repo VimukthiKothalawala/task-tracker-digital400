@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/atoms/card";
 import { Heading } from "@/components/atoms";
 
 export interface AuthLayoutProps {

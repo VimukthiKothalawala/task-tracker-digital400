@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/atoms/card";
 import { Text, Heading } from "@/components/atoms";
 import { TaskCard } from "@/components/molecules/task-card";
 

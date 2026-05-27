@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/atoms/button";
 import { Input } from "@/components/atoms/input";
 import { FormField } from "@/components/molecules/form-field";
 import { AuthLayout } from "@/components/templates/auth-layout";
@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Text } from "@/components/atoms";
 
 type PageProps = {
-  searchParams?: Promise<{ message?: string }>;
+  searchParams?: Promise<{ error?: string; success?: string }>;
 };
 
 export default async function SignupPage({ searchParams }: PageProps) {
@@ -21,26 +21,40 @@ export default async function SignupPage({ searchParams }: PageProps) {
     const password = String(formData.get("password") ?? "");
 
     const supabase = await createClient();
-    const { error } = await supabase.auth.signUp({
+    const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
     });
 
-    if (error) {
-      redirect(`/signup?message=${encodeURIComponent(error.message)}`);
+    if (signUpError) {
+      redirect(`/signup?error=${encodeURIComponent(signUpError.message)}`);
     }
 
-    redirect(
-      "/login?message=" +
-        encodeURIComponent("Account created. You can sign in now."),
-    );
+    // Auto-login after account creation
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      redirect(`/login?success=` + 
+        encodeURIComponent("Account created. Please sign in now."));
+    }
+
+    // Successfully logged in, redirect to dashboard
+    redirect("/dashboard");
   }
 
   return (
     <AuthLayout title="Create Account" subtitle="Join TaskFlow today">
-      {params.message ? (
+      {params.error ? (
         <div className="rounded-lg border border-red-300 bg-red-50 dark:bg-red-950 p-3 text-sm text-red-800 dark:text-red-200 mb-4">
-          {params.message}
+          {params.error}
+        </div>
+      ) : null}
+      {params.success ? (
+        <div className="rounded-lg border border-green-300 bg-green-50 dark:bg-green-950 p-3 text-sm text-green-800 dark:text-green-200 mb-4">
+          {params.success}
         </div>
       ) : null}
 

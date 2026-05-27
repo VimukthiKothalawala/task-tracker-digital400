@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/atoms/card";
 import { Text, Heading } from "@/components/atoms";
 
 export interface DashboardStatsProps {
