@@ -32,8 +32,6 @@ type StatusFilter = "ALL" | Task["status"];
 type PriorityFilter = "ALL" | Task["priority"];
 type DueFilter = "ALL" | "OVERDUE" | "DUE_SOON" | "NO_DUE_DATE" | "HAS_DUE_DATE";
 
-const PAGE_SIZES = [10, 20, 50] as const;
-
 function formatDate(dateString?: string): string {
   if (!dateString) return "—";
   return new Date(dateString).toLocaleDateString("en-US", {
@@ -65,10 +63,10 @@ export default function DashboardTasksPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
   const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>("ALL");
   const [dueFilter, setDueFilter] = useState<DueFilter>("ALL");
-  const [pageSize, setPageSize] = useState<(typeof PAGE_SIZES)[number]>(PAGE_SIZES[0]);
   const [page, setPage] = useState(1);
   const router = useRouter();
   const supabase = createClient();
+  const pageSize = 20; // Fixed page size
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -139,7 +137,7 @@ export default function DashboardTasksPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [searchQuery, statusFilter, priorityFilter, dueFilter, pageSize]);
+  }, [searchQuery, statusFilter, priorityFilter, dueFilter]);
 
   useEffect(() => {
     if (page > totalPages) {
@@ -234,23 +232,6 @@ export default function DashboardTasksPage() {
                 <SelectItem value="DUE_SOON">Due soon</SelectItem>
                 <SelectItem value="HAS_DUE_DATE">Has due date</SelectItem>
                 <SelectItem value="NO_DUE_DATE">No due date</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="lg:col-span-2">
-            <Select
-              value={String(pageSize)}
-              onValueChange={(value) => setPageSize(Number(value) as (typeof PAGE_SIZES)[number])}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Page size" />
-              </SelectTrigger>
-              <SelectContent>
-                {PAGE_SIZES.map((size) => (
-                  <SelectItem key={size} value={String(size)}>
-                    {size} per page
-                  </SelectItem>
-                ))}
               </SelectContent>
             </Select>
           </div>

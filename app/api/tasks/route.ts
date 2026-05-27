@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { title, description, priority, status, dueDate } = body;
 
-    if (!title) {
+    if (!title || !title.trim()) {
       return NextResponse.json(
         { error: "Title is required" },
         { status: 400 }
@@ -33,11 +33,11 @@ export async function POST(request: Request) {
     }
 
     const result = await createTask(
-      title,
-      description || "",
+      title.trim(),
+      description?.trim() || "",
       priority || "MEDIUM",
       status || "TODO",
-      dueDate
+      dueDate && typeof dueDate === "string" && dueDate.trim() ? dueDate : undefined
     );
 
     if (!result.success) {
@@ -46,6 +46,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(result.data, { status: 201 });
   } catch (error) {
+    console.error("POST /api/tasks error:", error);
     return NextResponse.json(
       { error: "Failed to create task" },
       { status: 500 }

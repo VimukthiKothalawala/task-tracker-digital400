@@ -9,7 +9,15 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
-    const result = await updateTask(id, body);
+    // Clean up optional fields
+    const cleanedData = {
+      ...body,
+      dueDate: body.dueDate && typeof body.dueDate === "string" && body.dueDate.trim() ? body.dueDate : undefined,
+      title: body.title ? body.title.trim() : undefined,
+      description: body.description ? body.description.trim() : undefined,
+    };
+
+    const result = await updateTask(id, cleanedData);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 400 });
@@ -17,6 +25,7 @@ export async function PATCH(
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error("PATCH /api/tasks/[id] error:", error);
     return NextResponse.json(
       { error: "Failed to update task" },
       { status: 500 }
@@ -38,6 +47,7 @@ export async function DELETE(
 
     return NextResponse.json(result.data);
   } catch (error) {
+    console.error("DELETE /api/tasks/[id] error:", error);
     return NextResponse.json(
       { error: "Failed to delete task" },
       { status: 500 }

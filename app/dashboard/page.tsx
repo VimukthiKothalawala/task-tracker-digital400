@@ -104,13 +104,23 @@ export default function DashboardPage() {
   const handleCreateTask = async (formData: TaskFormData) => {
     try {
       setIsSubmitting(true);
+      
+      // Clean up form data: convert empty dueDate to undefined
+      const cleanedData = {
+        ...formData,
+        dueDate: formData.dueDate?.trim() ? formData.dueDate : undefined,
+      };
+      
       const response = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(cleanedData),
       });
 
-      if (!response.ok) throw new Error("Failed to create task");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        throw new Error(errorData.error || `Failed to create task (${response.status})`);
+      }
 
       await fetchTasks();
       setIsFormOpen(false);
@@ -128,13 +138,23 @@ export default function DashboardPage() {
 
     try {
       setIsSubmitting(true);
+      
+      // Clean up form data: convert empty dueDate to undefined
+      const cleanedData = {
+        ...formData,
+        dueDate: formData.dueDate?.trim() ? formData.dueDate : undefined,
+      };
+      
       const response = await fetch(`/api/tasks/${editingTask.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(cleanedData),
       });
 
-      if (!response.ok) throw new Error("Failed to update task");
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        throw new Error(errorData.error || `Failed to update task (${response.status})`);
+      }
 
       await fetchTasks();
       setIsFormOpen(false);

@@ -35,8 +35,8 @@ function formatDate(dateString?: string): string {
   });
 }
 
-function isOverdue(dateString?: string): boolean {
-  if (!dateString) return false;
+function isOverdue(dateString?: string, status?: string): boolean {
+  if (!dateString || status === "DONE") return false;
   return new Date(dateString) < new Date() && new Date(dateString).toDateString() !== new Date().toDateString();
 }
 
@@ -54,7 +54,7 @@ export function TaskCard({
   onDragEnd,
   isDragging,
 }: TaskCardProps) {
-  const overdue = isOverdue(dueDate);
+  const overdue = isOverdue(dueDate, status);
 
   return (
     <Card
