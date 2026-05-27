@@ -11,8 +11,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+} from "@/components/atoms/select";
+import { Button } from "@/components/atoms/button";
 import { PriorityBadge } from "@/components/molecules/priority-badge";
 import { StatusBadge } from "@/components/molecules/status-badge";
 import { createClient } from "@/lib/supabase/client";
