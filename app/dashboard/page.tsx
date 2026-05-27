@@ -62,12 +62,18 @@ export default function DashboardPage() {
     try {
       setIsLoading(true);
       const response = await fetch("/api/tasks");
-      if (!response.ok) throw new Error("Failed to fetch tasks");
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        throw new Error(errorData.error || `HTTP ${response.status}: Failed to fetch tasks`);
+      }
+      
       const data = await response.json();
       setTasks(data);
       updateStats(data);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
+      // You can add a toast notification here for user feedback
     } finally {
       setIsLoading(false);
     }

@@ -2,13 +2,22 @@ import { NextResponse } from "next/server";
 import { getTasks, createTask } from "@/lib/actions/tasks";
 
 export async function GET() {
-  const result = await getTasks();
-  
-  if (!result.success) {
-    return NextResponse.json({ error: result.error }, { status: 400 });
-  }
+  try {
+    const result = await getTasks();
+    
+    if (!result.success) {
+      const status = result.error === "Unauthorized" ? 401 : 500;
+      return NextResponse.json({ error: result.error }, { status });
+    }
 
-  return NextResponse.json(result.data);
+    return NextResponse.json(result.data);
+  } catch (error) {
+    console.error("GET /api/tasks error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch tasks" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(request: Request) {

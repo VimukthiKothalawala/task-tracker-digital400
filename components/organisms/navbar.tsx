@@ -20,8 +20,8 @@ export interface NavbarProps {
 }
 
 const navigationLinks = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Tasks", href: "/dashboard" },
+  { id: "dashboard", label: "Dashboard", href: "/dashboard" },
+  { id: "tasks", label: "Tasks", href: "/dashboard" },
 ];
 
 export function Navbar({ userEmail, onLogout }: NavbarProps) {
@@ -47,7 +47,7 @@ export function Navbar({ userEmail, onLogout }: NavbarProps) {
           <div className="hidden md:flex items-center gap-8">
             {navigationLinks.map((link) => (
               <Link
-                key={link.href}
+                key={link.id}
                 href={link.href}
                 className={`text-sm font-medium transition-colors ${
                   pathname === link.href

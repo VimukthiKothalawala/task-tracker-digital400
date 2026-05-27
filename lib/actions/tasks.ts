@@ -16,6 +16,7 @@ export async function getTasks() {
 
     return { success: true, data: userTasks };
   } catch (error) {
+    console.error("getTasks error:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to fetch tasks",
@@ -48,6 +49,7 @@ export async function createTask(
 
     return { success: true, data: result[0] };
   } catch (error) {
+    console.error("createTask error:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to create task",
@@ -78,6 +80,7 @@ export async function updateTask(
     if (!result.length) throw new Error("Task not found");
     return { success: true, data: result[0] };
   } catch (error) {
+    console.error("updateTask error:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to update task",
@@ -98,6 +101,7 @@ export async function deleteTask(id: string) {
     if (!result.length) throw new Error("Task not found");
     return { success: true, data: result[0] };
   } catch (error) {
+    console.error("deleteTask error:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Failed to delete task",

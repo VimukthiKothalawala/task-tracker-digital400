@@ -1,13 +1,13 @@
 import { relations } from "drizzle-orm/relations";
-import { users, tasks } from "./schema";
+import { authUsers, tasks } from "./schema";
 
 export const tasksRelations = relations(tasks, ({one}) => ({
-	users: one(users, {
+	authUsers: one(authUsers, {
 		fields: [tasks.userId],
-		references: [users.id]
+		references: [authUsers.id]
 	}),
 }));
 
-export const usersRelations = relations(users, ({many}) => ({
+export const authUsersRelations = relations(authUsers, ({many}) => ({
 	tasks: many(tasks),
 }));
