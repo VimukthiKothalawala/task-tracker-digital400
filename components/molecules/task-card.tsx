@@ -1,9 +1,15 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Text, Heading } from "@/components/atoms";
 import { PriorityBadge } from "./priority-badge";
 import { StatusBadge } from "./status-badge";
-import { Trash2, Edit2 } from "lucide-react";
+import { MoreVertical, Trash2, Edit2 } from "lucide-react";
 
 export interface TaskCardProps {
   id: string;
@@ -14,7 +20,10 @@ export interface TaskCardProps {
   dueDate?: string;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
-  onStatusChange: (id: string, status: "TODO" | "IN_PROGRESS" | "DONE") => void;
+  draggable?: boolean;
+  onDragStart?: (event: React.DragEvent<HTMLDivElement>) => void;
+  onDragEnd?: (event: React.DragEvent<HTMLDivElement>) => void;
+  isDragging?: boolean;
 }
 
 function formatDate(dateString?: string): string {
@@ -40,12 +49,22 @@ export function TaskCard({
   dueDate,
   onEdit,
   onDelete,
-  onStatusChange,
+  draggable,
+  onDragStart,
+  onDragEnd,
+  isDragging,
 }: TaskCardProps) {
   const overdue = isOverdue(dueDate);
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card
+      className={`hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing ${
+        isDragging ? "opacity-60" : ""
+      }`}
+      draggable={draggable}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+    >
       <CardHeader className="pb-3">
         <div className="flex justify-between items-start gap-2">
           <div className="flex-1 min-w-0">
@@ -53,7 +72,30 @@ export function TaskCard({
               {title}
             </Heading>
           </div>
-          <PriorityBadge priority={priority} />
+          <div className="flex items-center gap-2">
+            <PriorityBadge priority={priority} />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <MoreVertical className="h-4 w-4" />
+                  <span className="sr-only">Open actions</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onEdit(id)}>
+                  <Edit2 className="h-4 w-4 mr-2" />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => onDelete(id)}
+                  className="text-red-600 focus:text-red-600"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -74,59 +116,6 @@ export function TaskCard({
           </div>
         </div>
 
-        <div className="flex gap-2 pt-2 border-t">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onEdit(id)}
-            className="flex-1"
-          >
-            <Edit2 className="w-4 h-4 mr-1" />
-            Edit
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onDelete(id)}
-            className="flex-1 text-red-600 hover:text-red-700 hover:bg-red-50"
-          >
-            <Trash2 className="w-4 h-4 mr-1" />
-            Delete
-          </Button>
-        </div>
-
-        <div className="flex gap-2 pt-2 border-t">
-          {status !== "TODO" && (
-            <Button
-              variant="outline"
-              size="xs"
-              onClick={() => onStatusChange(id, "TODO")}
-              className="flex-1"
-            >
-              To Do
-            </Button>
-          )}
-          {status !== "IN_PROGRESS" && (
-            <Button
-              variant="outline"
-              size="xs"
-              onClick={() => onStatusChange(id, "IN_PROGRESS")}
-              className="flex-1"
-            >
-              In Progress
-            </Button>
-          )}
-          {status !== "DONE" && (
-            <Button
-              variant="outline"
-              size="xs"
-              onClick={() => onStatusChange(id, "DONE")}
-              className="flex-1"
-            >
-              Done
-            </Button>
-          )}
-        </div>
       </CardContent>
     </Card>
   );

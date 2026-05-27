@@ -58,9 +58,11 @@ export default function DashboardPage() {
     checkAuth();
   }, []);
 
-  const fetchTasks = async () => {
+  const fetchTasks = async (options?: { showLoading?: boolean }) => {
     try {
-      setIsLoading(true);
+      if (options?.showLoading !== false) {
+        setIsLoading(true);
+      }
       const response = await fetch("/api/tasks");
       
       if (!response.ok) {
@@ -75,7 +77,9 @@ export default function DashboardPage() {
       console.error("Failed to fetch tasks:", error);
       // You can add a toast notification here for user feedback
     } finally {
-      setIsLoading(false);
+      if (options?.showLoading !== false) {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -164,6 +168,14 @@ export default function DashboardPage() {
     id: string,
     status: "TODO" | "IN_PROGRESS" | "DONE"
   ) => {
+    const previousTasks = tasks;
+    const nextTasks = tasks.map((task) =>
+      task.id === id ? { ...task, status, updatedAt: new Date().toISOString() } : task
+    );
+
+    setTasks(nextTasks);
+    updateStats(nextTasks);
+
     try {
       const response = await fetch(`/api/tasks/${id}`, {
         method: "PATCH",
@@ -173,8 +185,10 @@ export default function DashboardPage() {
 
       if (!response.ok) throw new Error("Failed to update task");
 
-      await fetchTasks();
+      fetchTasks({ showLoading: false });
     } catch (error) {
+      setTasks(previousTasks);
+      updateStats(previousTasks);
       console.error("Failed to update task status:", error);
     }
   };

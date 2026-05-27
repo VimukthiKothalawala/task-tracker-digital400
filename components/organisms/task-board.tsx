@@ -28,14 +28,42 @@ const STATUSES = [
 ] as const;
 
 export function TaskBoard({ tasks, onEdit, onDelete, onStatusChange }: TaskBoardProps) {
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+
   const getTasksByStatus = (status: string) => tasks.filter((t) => t.status === status);
+  const getTaskById = (id: string) => tasks.find((t) => t.id === id);
+
+  const handleDragStart = (event: React.DragEvent<HTMLDivElement>, id: string) => {
+    event.dataTransfer.setData("text/plain", id);
+    event.dataTransfer.effectAllowed = "move";
+    setDraggingId(id);
+  };
+
+  const handleDragEnd = () => {
+    setDraggingId(null);
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>, status: Task["status"]) => {
+    event.preventDefault();
+    const id = event.dataTransfer.getData("text/plain");
+    if (!id) return;
+    const task = getTaskById(id);
+    if (!task || task.status === status) return;
+    setDraggingId(null);
+    onStatusChange(id, status);
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {STATUSES.map(({ key, label, bgColor }) => {
         const statusTasks = getTasksByStatus(key);
         return (
-          <div key={key} className={`${bgColor} rounded-lg p-4 space-y-3`}>
+          <div
+            key={key}
+            className={`${bgColor} rounded-lg p-4 space-y-3`}
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={(event) => handleDrop(event, key)}
+          >
             <div className="flex items-center justify-between mb-4">
               <Heading as="h3" size="h4">
                 {label}
@@ -57,7 +85,10 @@ export function TaskBoard({ tasks, onEdit, onDelete, onStatusChange }: TaskBoard
                     {...task}
                     onEdit={onEdit}
                     onDelete={onDelete}
-                    onStatusChange={onStatusChange}
+                    draggable
+                    onDragStart={(event) => handleDragStart(event, task.id)}
+                    onDragEnd={handleDragEnd}
+                    isDragging={draggingId === task.id}
                   />
                 ))
               )}
