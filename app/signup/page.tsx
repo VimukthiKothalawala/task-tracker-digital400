@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/atoms/input";
+import { FormField } from "@/components/molecules/form-field";
+import { AuthLayout } from "@/components/templates/auth-layout";
 import { createClient } from "@/lib/supabase/server";
+import { Text } from "@/components/atoms";
 
 type PageProps = {
   searchParams?: Promise<{ message?: string }>;
@@ -26,7 +30,6 @@ export default async function SignupPage({ searchParams }: PageProps) {
       redirect(`/signup?message=${encodeURIComponent(error.message)}`);
     }
 
-    // If email confirmations are enabled, the user may need to verify first.
     redirect(
       "/login?message=" +
         encodeURIComponent("Account created. You can sign in now."),
@@ -34,60 +37,45 @@ export default async function SignupPage({ searchParams }: PageProps) {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-6">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold">Sign up</h1>
-          <p className="text-sm text-muted-foreground">Create an account.</p>
+    <AuthLayout title="Create Account" subtitle="Join TaskFlow today">
+      {params.message ? (
+        <div className="rounded-lg border border-red-300 bg-red-50 dark:bg-red-950 p-3 text-sm text-red-800 dark:text-red-200 mb-4">
+          {params.message}
         </div>
+      ) : null}
 
-        {params.message ? (
-          <div className="rounded-lg border border-border bg-card p-3 text-sm text-foreground">
-            {params.message}
-          </div>
-        ) : null}
+      <form action={signUp} className="space-y-4">
+        <FormField label="Email" required>
+          <Input
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            required
+          />
+        </FormField>
 
-        <form action={signUp} className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium" htmlFor="email">
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-            />
-          </div>
+        <FormField label="Password" required>
+          <Input
+            type="password"
+            name="password"
+            placeholder="••••••••"
+            required
+          />
+        </FormField>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium" htmlFor="password">
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-            />
-          </div>
+        <Button type="submit" className="w-full">
+          Create Account
+        </Button>
+      </form>
 
-          <Button type="submit" className="w-full" size="lg">
-            Create account
-          </Button>
-        </form>
-
-        <p className="text-sm text-muted-foreground">
+      <div className="text-center">
+        <Text size="sm" variant="muted">
           Already have an account?{" "}
-          <Link className="underline underline-offset-4" href="/login">
-            Login
+          <Link href="/login" className="text-primary font-semibold hover:underline">
+            Sign in
           </Link>
-        </p>
+        </Text>
       </div>
-    </main>
+    </AuthLayout>
   );
 }

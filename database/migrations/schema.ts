@@ -4,6 +4,11 @@ import { sql } from "drizzle-orm"
 export const taskPriority = pgEnum("task_priority", ['LOW', 'MEDIUM', 'HIGH'])
 export const taskStatus = pgEnum("task_status", ['TODO', 'IN_PROGRESS', 'DONE'])
 
+export const users = pgTable("users", {
+	id: uuid().default(sql`uuid_generate_v4()`).primaryKey().notNull(),
+	email: text().unique().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+});
 
 export const tasks = pgTable("tasks", {
 	id: uuid().default(sql`uuid_generate_v4()`).primaryKey().notNull(),
