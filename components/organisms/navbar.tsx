@@ -21,7 +21,7 @@ export interface NavbarProps {
 
 const navigationLinks = [
   { id: "dashboard", label: "Dashboard", href: "/dashboard" },
-  { id: "tasks", label: "Tasks", href: "/dashboard" },
+  { id: "tasks", label: "Tasks", href: "/dashboard/tasks" },
 ];
 
 export function Navbar({ userEmail, onLogout }: NavbarProps) {
