@@ -31,13 +31,26 @@ const textVariants = cva("text-foreground", {
 });
 
 export interface TextProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof textVariants> {
   as?: React.ElementType;
 }
 
-function Text({ className, size, weight, variant, as: Component = "div", ...props }: TextProps) {
-  return <Component className={cn(textVariants({ size, weight, variant }), className)} {...props} />;
+function Text({
+  className,
+  size,
+  weight,
+  variant,
+  as: Component = "div",
+  ...props
+}: TextProps) {
+  return (
+    <Component
+      className={cn(textVariants({ size, weight, variant }), className)}
+      {...props}
+    />
+  );
 }
 
 export { Text, textVariants };

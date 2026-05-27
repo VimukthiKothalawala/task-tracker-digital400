@@ -37,7 +37,10 @@ function formatDate(dateString?: string): string {
 
 function isOverdue(dateString?: string, status?: string): boolean {
   if (!dateString || status === "DONE") return false;
-  return new Date(dateString) < new Date() && new Date(dateString).toDateString() !== new Date().toDateString();
+  return (
+    new Date(dateString) < new Date() &&
+    new Date(dateString).toDateString() !== new Date().toDateString()
+  );
 }
 
 export function TaskCard({
@@ -109,13 +112,17 @@ export function TaskCard({
           <div className="flex gap-2 items-center">
             <StatusBadge status={status} />
             {dueDate && (
-              <Text size="xs" variant={overdue ? "muted" : "default"} className={overdue ? "text-red-600 font-semibold" : ""}>
-                {overdue ? "🔴 " : ""}{formatDate(dueDate)}
+              <Text
+                size="xs"
+                variant={overdue ? "muted" : "default"}
+                className={overdue ? "text-red-600 font-semibold" : ""}
+              >
+                {overdue ? "🔴 " : ""}
+                {formatDate(dueDate)}
               </Text>
             )}
           </div>
         </div>
-
       </CardContent>
     </Card>
   );

@@ -29,7 +29,7 @@ export async function createTask(
   description: string,
   priority: "LOW" | "MEDIUM" | "HIGH",
   status: "TODO" | "IN_PROGRESS" | "DONE",
-  dueDate?: string
+  dueDate?: string,
 ) {
   try {
     const user = await getCurrentUser();
@@ -65,7 +65,7 @@ export async function updateTask(
     priority: "LOW" | "MEDIUM" | "HIGH";
     status: "TODO" | "IN_PROGRESS" | "DONE";
     dueDate?: string;
-  }>
+  }>,
 ) {
   try {
     const user = await getCurrentUser();
@@ -129,15 +129,15 @@ export async function getTaskStats() {
         inProgress: allTasks.filter((t) => t.status === "IN_PROGRESS").length,
         done: allTasks.filter((t) => t.status === "DONE").length,
         overdue: allTasks.filter(
-          (t) =>
-            t.dueDate && new Date(t.dueDate) < now && t.status !== "DONE"
+          (t) => t.dueDate && new Date(t.dueDate) < now && t.status !== "DONE",
         ).length,
       },
     };
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to get task stats",
+      error:
+        error instanceof Error ? error.message : "Failed to get task stats",
     };
   }
 }

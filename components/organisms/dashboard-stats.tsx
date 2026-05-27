@@ -30,12 +30,14 @@ export function DashboardStats({
     {
       label: "In Progress",
       value: inProgress,
-      color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+      color:
+        "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
     },
     {
       label: "Done",
       value: done,
-      color: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+      color:
+        "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
     },
     {
       label: "🔴 Overdue",
@@ -48,7 +50,10 @@ export function DashboardStats({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
       {stats.map((stat) => (
-        <Card key={stat.label} className={stat.highlight ? "ring-2 ring-red-500" : ""}>
+        <Card
+          key={stat.label}
+          className={stat.highlight ? "ring-2 ring-red-500" : ""}
+        >
           <CardHeader className="pb-2">
             <Text size="sm" weight="medium" variant="muted">
               {stat.label}

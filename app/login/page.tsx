@@ -68,7 +68,10 @@ export default async function LoginPage({ searchParams }: PageProps) {
       <div className="text-center">
         <Text size="sm" variant="muted">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-primary font-semibold hover:underline">
+          <Link
+            href="/signup"
+            className="text-primary font-semibold hover:underline"
+          >
             Sign up
           </Link>
         </Text>

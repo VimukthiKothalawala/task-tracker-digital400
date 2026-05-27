@@ -3,7 +3,7 @@ import { updateTask, deleteTask } from "@/lib/actions/tasks";
 
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -12,7 +12,10 @@ export async function PATCH(
     // Clean up optional fields
     const cleanedData = {
       ...body,
-      dueDate: body.dueDate && typeof body.dueDate === "string" && body.dueDate.trim() ? body.dueDate : undefined,
+      dueDate:
+        body.dueDate && typeof body.dueDate === "string" && body.dueDate.trim()
+          ? body.dueDate
+          : undefined,
       title: body.title ? body.title.trim() : undefined,
       description: body.description ? body.description.trim() : undefined,
     };
@@ -28,14 +31,14 @@ export async function PATCH(
     console.error("PATCH /api/tasks/[id] error:", error);
     return NextResponse.json(
       { error: "Failed to update task" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
@@ -50,7 +53,7 @@ export async function DELETE(
     console.error("DELETE /api/tasks/[id] error:", error);
     return NextResponse.json(
       { error: "Failed to delete task" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

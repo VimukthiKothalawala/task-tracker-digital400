@@ -23,17 +23,30 @@ export interface TaskBoardProps {
 
 const STATUSES = [
   { key: "TODO", label: "To Do", bgColor: "bg-blue-50 dark:bg-blue-950" },
-  { key: "IN_PROGRESS", label: "In Progress", bgColor: "bg-yellow-50 dark:bg-yellow-950" },
+  {
+    key: "IN_PROGRESS",
+    label: "In Progress",
+    bgColor: "bg-yellow-50 dark:bg-yellow-950",
+  },
   { key: "DONE", label: "Done", bgColor: "bg-green-50 dark:bg-green-950" },
 ] as const;
 
-export function TaskBoard({ tasks, onEdit, onDelete, onStatusChange }: TaskBoardProps) {
+export function TaskBoard({
+  tasks,
+  onEdit,
+  onDelete,
+  onStatusChange,
+}: TaskBoardProps) {
   const [draggingId, setDraggingId] = useState<string | null>(null);
 
-  const getTasksByStatus = (status: string) => tasks.filter((t) => t.status === status);
+  const getTasksByStatus = (status: string) =>
+    tasks.filter((t) => t.status === status);
   const getTaskById = (id: string) => tasks.find((t) => t.id === id);
 
-  const handleDragStart = (event: React.DragEvent<HTMLDivElement>, id: string) => {
+  const handleDragStart = (
+    event: React.DragEvent<HTMLDivElement>,
+    id: string,
+  ) => {
     event.dataTransfer.setData("text/plain", id);
     event.dataTransfer.effectAllowed = "move";
     setDraggingId(id);
@@ -43,7 +56,10 @@ export function TaskBoard({ tasks, onEdit, onDelete, onStatusChange }: TaskBoard
     setDraggingId(null);
   };
 
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>, status: Task["status"]) => {
+  const handleDrop = (
+    event: React.DragEvent<HTMLDivElement>,
+    status: Task["status"],
+  ) => {
     event.preventDefault();
     const id = event.dataTransfer.getData("text/plain");
     if (!id) return;
@@ -68,7 +84,11 @@ export function TaskBoard({ tasks, onEdit, onDelete, onStatusChange }: TaskBoard
               <Heading as="h3" size="h4">
                 {label}
               </Heading>
-              <Text size="sm" weight="semibold" className="text-muted-foreground">
+              <Text
+                size="sm"
+                weight="semibold"
+                className="text-muted-foreground"
+              >
                 {statusTasks.length}
               </Text>
             </div>

@@ -64,12 +64,16 @@ export default function DashboardPage() {
         setIsLoading(true);
       }
       const response = await fetch("/api/tasks");
-      
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
-        throw new Error(errorData.error || `HTTP ${response.status}: Failed to fetch tasks`);
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: "Unknown error" }));
+        throw new Error(
+          errorData.error || `HTTP ${response.status}: Failed to fetch tasks`,
+        );
       }
-      
+
       const data = await response.json();
       setTasks(data);
       updateStats(data);
@@ -86,10 +90,7 @@ export default function DashboardPage() {
   const updateStats = (taskList: Task[]) => {
     const now = new Date();
     const overdue = taskList.filter(
-      (t) =>
-        t.dueDate &&
-        new Date(t.dueDate) < now &&
-        t.status !== "DONE"
+      (t) => t.dueDate && new Date(t.dueDate) < now && t.status !== "DONE",
     ).length;
 
     setStats({
@@ -104,13 +105,13 @@ export default function DashboardPage() {
   const handleCreateTask = async (formData: TaskFormData) => {
     try {
       setIsSubmitting(true);
-      
+
       // Clean up form data: convert empty dueDate to undefined
       const cleanedData = {
         ...formData,
         dueDate: formData.dueDate?.trim() ? formData.dueDate : undefined,
       };
-      
+
       const response = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -118,15 +119,19 @@ export default function DashboardPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
-        throw new Error(errorData.error || `Failed to create task (${response.status})`);
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: "Unknown error" }));
+        throw new Error(
+          errorData.error || `Failed to create task (${response.status})`,
+        );
       }
 
       await fetchTasks();
       setIsFormOpen(false);
     } catch (error) {
       throw new Error(
-        error instanceof Error ? error.message : "Failed to create task"
+        error instanceof Error ? error.message : "Failed to create task",
       );
     } finally {
       setIsSubmitting(false);
@@ -138,13 +143,13 @@ export default function DashboardPage() {
 
     try {
       setIsSubmitting(true);
-      
+
       // Clean up form data: convert empty dueDate to undefined
       const cleanedData = {
         ...formData,
         dueDate: formData.dueDate?.trim() ? formData.dueDate : undefined,
       };
-      
+
       const response = await fetch(`/api/tasks/${editingTask.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -152,8 +157,12 @@ export default function DashboardPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
-        throw new Error(errorData.error || `Failed to update task (${response.status})`);
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: "Unknown error" }));
+        throw new Error(
+          errorData.error || `Failed to update task (${response.status})`,
+        );
       }
 
       await fetchTasks();
@@ -161,7 +170,7 @@ export default function DashboardPage() {
       setEditingTask(null);
     } catch (error) {
       throw new Error(
-        error instanceof Error ? error.message : "Failed to update task"
+        error instanceof Error ? error.message : "Failed to update task",
       );
     } finally {
       setIsSubmitting(false);
@@ -186,11 +195,13 @@ export default function DashboardPage() {
 
   const handleStatusChange = async (
     id: string,
-    status: "TODO" | "IN_PROGRESS" | "DONE"
+    status: "TODO" | "IN_PROGRESS" | "DONE",
   ) => {
     const previousTasks = tasks;
     const nextTasks = tasks.map((task) =>
-      task.id === id ? { ...task, status, updatedAt: new Date().toISOString() } : task
+      task.id === id
+        ? { ...task, status, updatedAt: new Date().toISOString() }
+        : task,
     );
 
     setTasks(nextTasks);

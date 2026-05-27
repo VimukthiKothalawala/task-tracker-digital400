@@ -71,7 +71,10 @@ export default async function SignupPage({ searchParams }: PageProps) {
       <div className="text-center">
         <Text size="sm" variant="muted">
           Already have an account?{" "}
-          <Link href="/login" className="text-primary font-semibold hover:underline">
+          <Link
+            href="/login"
+            className="text-primary font-semibold hover:underline"
+          >
             Sign in
           </Link>
         </Text>

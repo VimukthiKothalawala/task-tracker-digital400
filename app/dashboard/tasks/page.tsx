@@ -30,7 +30,12 @@ interface Task {
 
 type StatusFilter = "ALL" | Task["status"];
 type PriorityFilter = "ALL" | Task["priority"];
-type DueFilter = "ALL" | "OVERDUE" | "DUE_SOON" | "NO_DUE_DATE" | "HAS_DUE_DATE";
+type DueFilter =
+  | "ALL"
+  | "OVERDUE"
+  | "DUE_SOON"
+  | "NO_DUE_DATE"
+  | "HAS_DUE_DATE";
 
 function formatDate(dateString?: string): string {
   if (!dateString) return "—";
@@ -44,7 +49,10 @@ function formatDate(dateString?: string): string {
 function isOverdue(dateString?: string): boolean {
   if (!dateString) return false;
   const today = new Date();
-  return new Date(dateString) < today && new Date(dateString).toDateString() !== today.toDateString();
+  return (
+    new Date(dateString) < today &&
+    new Date(dateString).toDateString() !== today.toDateString()
+  );
 }
 
 function isDueSoon(dateString?: string, days = 7): boolean {
@@ -92,8 +100,12 @@ export default function DashboardTasksPage() {
       const response = await fetch("/api/tasks");
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
-        throw new Error(errorData.error || `HTTP ${response.status}: Failed to fetch tasks`);
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: "Unknown error" }));
+        throw new Error(
+          errorData.error || `HTTP ${response.status}: Failed to fetch tasks`,
+        );
       }
 
       const data = await response.json();
@@ -115,11 +127,15 @@ export default function DashboardTasksPage() {
 
     return tasks
       .filter((task) => {
-        if (statusFilter !== "ALL" && task.status !== statusFilter) return false;
-        if (priorityFilter !== "ALL" && task.priority !== priorityFilter) return false;
+        if (statusFilter !== "ALL" && task.status !== statusFilter)
+          return false;
+        if (priorityFilter !== "ALL" && task.priority !== priorityFilter)
+          return false;
 
-        if (dueFilter === "OVERDUE") return isOverdue(task.dueDate) && task.status !== "DONE";
-        if (dueFilter === "DUE_SOON") return isDueSoon(task.dueDate) && task.status !== "DONE";
+        if (dueFilter === "OVERDUE")
+          return isOverdue(task.dueDate) && task.status !== "DONE";
+        if (dueFilter === "DUE_SOON")
+          return isDueSoon(task.dueDate) && task.status !== "DONE";
         if (dueFilter === "NO_DUE_DATE") return !task.dueDate;
         if (dueFilter === "HAS_DUE_DATE") return Boolean(task.dueDate);
 
@@ -127,10 +143,14 @@ export default function DashboardTasksPage() {
       })
       .filter((task) => {
         if (!query) return true;
-        const haystack = `${task.title} ${task.description || ""}`.toLowerCase();
+        const haystack =
+          `${task.title} ${task.description || ""}`.toLowerCase();
         return haystack.includes(query);
       })
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      );
   }, [tasks, searchQuery, statusFilter, priorityFilter, dueFilter]);
 
   const totalPages = Math.max(1, Math.ceil(filteredTasks.length / pageSize));
@@ -153,7 +173,7 @@ export default function DashboardTasksPage() {
   const pageNumbers = useMemo(() => {
     const maxButtons = 5;
     let start = Math.max(1, page - Math.floor(maxButtons / 2));
-    let end = Math.min(totalPages, start + maxButtons - 1);
+    const end = Math.min(totalPages, start + maxButtons - 1);
     start = Math.max(1, end - maxButtons + 1);
 
     return Array.from({ length: end - start + 1 }, (_, index) => start + index);
@@ -208,7 +228,9 @@ export default function DashboardTasksPage() {
           <div className="lg:col-span-2">
             <Select
               value={priorityFilter}
-              onValueChange={(value) => setPriorityFilter(value as PriorityFilter)}
+              onValueChange={(value) =>
+                setPriorityFilter(value as PriorityFilter)
+              }
             >
               <SelectTrigger>
                 <SelectValue placeholder="Priority" />
@@ -222,7 +244,10 @@ export default function DashboardTasksPage() {
             </Select>
           </div>
           <div className="lg:col-span-2">
-            <Select value={dueFilter} onValueChange={(value) => setDueFilter(value as DueFilter)}>
+            <Select
+              value={dueFilter}
+              onValueChange={(value) => setDueFilter(value as DueFilter)}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Due date" />
               </SelectTrigger>
@@ -265,7 +290,11 @@ export default function DashboardTasksPage() {
                         <div className="flex flex-col gap-1">
                           <Text weight="semibold">{task.title}</Text>
                           {task.description ? (
-                            <Text size="xs" variant="muted" className="line-clamp-2">
+                            <Text
+                              size="xs"
+                              variant="muted"
+                              className="line-clamp-2"
+                            >
                               {task.description}
                             </Text>
                           ) : null}
@@ -280,7 +309,11 @@ export default function DashboardTasksPage() {
                       <td className="px-4 py-4">
                         <Text
                           size="xs"
-                          className={isOverdue(task.dueDate) && task.status !== "DONE" ? "text-red-600 font-semibold" : ""}
+                          className={
+                            isOverdue(task.dueDate) && task.status !== "DONE"
+                              ? "text-red-600 font-semibold"
+                              : ""
+                          }
                         >
                           {formatDate(task.dueDate)}
                         </Text>
@@ -299,8 +332,10 @@ export default function DashboardTasksPage() {
 
           <div className="flex flex-col gap-3 border-t px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
             <Text size="xs" variant="muted">
-              Showing {filteredTasks.length === 0 ? 0 : (page - 1) * pageSize + 1}–
-              {Math.min(page * pageSize, filteredTasks.length)} of {filteredTasks.length} tasks
+              Showing{" "}
+              {filteredTasks.length === 0 ? 0 : (page - 1) * pageSize + 1}–
+              {Math.min(page * pageSize, filteredTasks.length)} of{" "}
+              {filteredTasks.length} tasks
             </Text>
 
             <div className="flex items-center gap-2">
@@ -327,7 +362,9 @@ export default function DashboardTasksPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+                onClick={() =>
+                  setPage((prev) => Math.min(totalPages, prev + 1))
+                }
                 disabled={page === totalPages}
               >
                 Next

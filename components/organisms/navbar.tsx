@@ -74,7 +74,9 @@ export function Navbar({ userEmail, onLogout }: NavbarProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem disabled>
-                  <span className="text-xs text-muted-foreground">{userEmail}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {userEmail}
+                  </span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={onLogout} className="text-red-600">
                   <LogOut className="w-4 h-4 mr-2" />

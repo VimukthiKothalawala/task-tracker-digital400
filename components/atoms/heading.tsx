@@ -16,13 +16,24 @@ const headingVariants = cva("font-bold text-foreground tracking-tight", {
 });
 
 export interface HeadingProps
-  extends React.HTMLAttributes<HTMLHeadingElement>,
+  extends
+    React.HTMLAttributes<HTMLHeadingElement>,
     VariantProps<typeof headingVariants> {
   as?: "h1" | "h2" | "h3" | "h4";
 }
 
-function Heading({ className, size, as: Component = "h1", ...props }: HeadingProps) {
-  return <Component className={cn(headingVariants({ size }), className)} {...props} />;
+function Heading({
+  className,
+  size,
+  as: Component = "h1",
+  ...props
+}: HeadingProps) {
+  return (
+    <Component
+      className={cn(headingVariants({ size }), className)}
+      {...props}
+    />
+  );
 }
 
 export { Heading, headingVariants };

@@ -42,7 +42,7 @@ export function TaskForm({
       priority: "MEDIUM",
       status: "TODO",
       dueDate: "",
-    }
+    },
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -63,7 +63,9 @@ export function TaskForm({
       await onSubmit(formData);
       // Form will be reset by parent
     } catch (error) {
-      setErrors({ submit: error instanceof Error ? error.message : "Failed to save task" });
+      setErrors({
+        submit: error instanceof Error ? error.message : "Failed to save task",
+      });
     }
   };
 
@@ -77,9 +79,7 @@ export function TaskForm({
         <Input
           placeholder="Enter task title"
           value={formData.title}
-          onChange={(e) =>
-            setFormData({ ...formData, title: e.target.value })
-          }
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           disabled={isLoading}
         />
       </FormField>
@@ -99,9 +99,12 @@ export function TaskForm({
 
       <div className="grid grid-cols-2 gap-4">
         <FormField label="Priority">
-          <Select value={formData.priority} onValueChange={(value: any) =>
-            setFormData({ ...formData, priority: value })
-          }>
+          <Select
+            value={formData.priority}
+            onValueChange={(value: any) =>
+              setFormData({ ...formData, priority: value })
+            }
+          >
             <SelectTrigger disabled={isLoading}>
               <SelectValue />
             </SelectTrigger>
@@ -114,9 +117,12 @@ export function TaskForm({
         </FormField>
 
         <FormField label="Status">
-          <Select value={formData.status} onValueChange={(value: any) =>
-            setFormData({ ...formData, status: value })
-          }>
+          <Select
+            value={formData.status}
+            onValueChange={(value: any) =>
+              setFormData({ ...formData, status: value })
+            }
+          >
             <SelectTrigger disabled={isLoading}>
               <SelectValue />
             </SelectTrigger>

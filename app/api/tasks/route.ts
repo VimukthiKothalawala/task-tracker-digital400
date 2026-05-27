@@ -4,7 +4,7 @@ import { getTasks, createTask } from "@/lib/actions/tasks";
 export async function GET() {
   try {
     const result = await getTasks();
-    
+
     if (!result.success) {
       const status = result.error === "Unauthorized" ? 401 : 500;
       return NextResponse.json({ error: result.error }, { status });
@@ -15,7 +15,7 @@ export async function GET() {
     console.error("GET /api/tasks error:", error);
     return NextResponse.json(
       { error: "Failed to fetch tasks" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -26,10 +26,7 @@ export async function POST(request: Request) {
     const { title, description, priority, status, dueDate } = body;
 
     if (!title || !title.trim()) {
-      return NextResponse.json(
-        { error: "Title is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Title is required" }, { status: 400 });
     }
 
     const result = await createTask(
@@ -37,7 +34,9 @@ export async function POST(request: Request) {
       description?.trim() || "",
       priority || "MEDIUM",
       status || "TODO",
-      dueDate && typeof dueDate === "string" && dueDate.trim() ? dueDate : undefined
+      dueDate && typeof dueDate === "string" && dueDate.trim()
+        ? dueDate
+        : undefined,
     );
 
     if (!result.success) {
@@ -49,7 +48,7 @@ export async function POST(request: Request) {
     console.error("POST /api/tasks error:", error);
     return NextResponse.json(
       { error: "Failed to create task" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
